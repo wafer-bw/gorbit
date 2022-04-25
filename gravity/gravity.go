@@ -83,9 +83,8 @@ func OrbitalElements(r f64.Vec3, v f64.Vec3, m1 float64, m2 float64) (a, e, w, l
 	n := f64.Vec3{-h[1], h[0], 0}
 	nmag := magnitude(n)
 
-	rvdot := dot(r, v)
 	ta := math.Acos(dot(evec, r) / (e * rmag))
-	if rvdot < 0 {
+	if rvdot := dot(r, v); rvdot < 0 {
 		ta = 2*Pi - ta
 	}
 
