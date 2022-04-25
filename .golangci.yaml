@@ -1,0 +1,40 @@
+run:
+  go: "1.18"
+linters:
+  # List extra linters to enable besides defaults
+  # https://golangci-lint.run/usage/linters/
+  enable:
+    - asciicheck # https://github.com/tdakkota/asciicheck
+    - bidichk # https://github.com/breml/bidichk
+    - bodyclose # https://github.com/timakin/bodyclose
+    - containedctx # https://github.com/sivchari/containedctx
+    - durationcheck # https://github.com/charithe/durationcheck
+    - errname # https://github.com/Antonboom/errname
+    - exhaustive # https://github.com/nishanths/exhaustive
+    - forcetypeassert # https://github.com/gostaticanalysis/forcetypeassert
+    - goconst # https://github.com/jgautheron/goconst
+    - testpackage # https://github.com/maratori/testpackage
+    - ifshort # https://github.com/esimonov/ifshort
+    - makezero # https://github.com/ashanbrown/makezero
+    - nilerr # https://github.com/gostaticanalysis/nilerr
+    - nilnil # https://github.com/Antonboom/nilnil
+    - prealloc # https://github.com/alexkohler/prealloc
+    - predeclared # https://github.com/nishanths/predeclared
+    - rowserrcheck # https://github.com/jingyugao/rowserrcheck
+    - sqlclosecheck # https://github.com/ryanrolds/sqlclosecheck
+    - tenv # https://github.com/sivchari/tenv
+    - thelper # https://github.com/kulti/thelper
+    - unconvert # https://github.com/mdempsky/unconvert
+    - unparam # https://github.com/mvdan/unparam
+    - wastedassign # https://github.com/sanposhiho/wastedassign
+    - whitespace # https://github.com/ultraware/whitespace
+    - nolintlint # https://github.com/golangci/golangci-lint/blob/master/pkg/golinters/nolintlint
+    - tparallel # https://github.com/moricho/tparallel
+
+linters-settings:
+  nolintlint:
+    allow-unused: true
+    allow-leading-space: false
+    allow-no-explanation: []
+    require-explanation: true
+    require-specific: true
