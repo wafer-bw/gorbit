@@ -9,3 +9,7 @@ fmt:
 benchmark:
 	go test -benchmem -bench . github.com/wafer-bw/gorbit/gravity
 .PHONY: benchmark
+
+test:
+	go test -coverprofile=coverage.out ./...
+.PHONY: test
