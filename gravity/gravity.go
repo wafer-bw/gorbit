@@ -131,9 +131,8 @@ func OrbitalElements(r f64.Vec3, v f64.Vec3, m1 float64, m2 float64) (a, e, w, l
 // r:  position relative to primary body (m),
 // v:  velocity relative to primary body (m/s)
 //
-// If the primary body is on-rails then set m2 to 0. If you don't
-// set m2 to 0 then the elements will be predicted based on the
-// bodies both orbiting the center of mass between the two.
+// If the primary body is on-rails then set m2 to 0.
+// See OrbitalElements for more details.
 //
 // https://downloads.rene-schwarz.com/download/M001-Keplerian_Orbit_Elements_to_Cartesian_State_Vectors.pdf
 func StateVectors(a, e, w, lan, i, m0, t, m1, m2 float64) (f64.Vec3, f64.Vec3) {
@@ -198,11 +197,16 @@ func Apoapsis(a, e float64) float64 {
 
 // Period (s).
 //
-// a:  semi-major axis   (m),
-// mu: G*(m1+m2) or G*m1 (kg)
+// a:  semi-major axis            (m),
+// m1: mass of the primary body   (kg),
+// m2: mass of the secondary body (kg)
+//
+// If the primary body is on-rails then set m2 to 0.
+// See OrbitalElements for more details.
 //
 // https://en.wikipedia.org/wiki/Orbital_period
-func Period(a, mu float64) float64 {
+func Period(a, m1, m2 float64) float64 {
+	mu := G * (m1 + m2)
 	return (2 * Pi) * math.Sqrt((a*a*a)/mu)
 }
 

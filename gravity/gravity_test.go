@@ -65,7 +65,6 @@ func TestOrbitalElements(t *testing.T) {
 		v := f64.Vec3{v2[0] - v1[0], v2[1] - v1[1], v2[2] - v1[2]}
 
 		m1, m2 := 5.972e24, 7.34767309e22
-		mu := gravity.G * (m1 + m2)
 
 		expectedA := 502989447.71483934
 		expectedE := 0.1940188768535872
@@ -85,7 +84,7 @@ func TestOrbitalElements(t *testing.T) {
 		require.Equal(t, fmt.Sprintf("%.5f", expectedLAN), fmt.Sprintf("%.5f", gravity.Degrees(lan)))
 		require.Equal(t, fmt.Sprintf("%.5f", expectedI), fmt.Sprintf("%.5f", gravity.Degrees(i)))
 		require.Equal(t, fmt.Sprintf("%.5f", expectedM), fmt.Sprintf("%.5f", m))
-		require.Equal(t, fmt.Sprintf("%.5f", expectedPeriod), fmt.Sprintf("%.5f", gravity.Period(a, mu)))
+		require.Equal(t, fmt.Sprintf("%.5f", expectedPeriod), fmt.Sprintf("%.5f", gravity.Period(a, m1, m2)))
 		require.Equal(t, fmt.Sprintf("%.5f", expectedPE), fmt.Sprintf("%.5f", gravity.Periapsis(a, e)))
 		require.Equal(t, fmt.Sprintf("%.5f", expectedAP), fmt.Sprintf("%.5f", gravity.Apoapsis(a, e)))
 	})
@@ -100,7 +99,6 @@ func TestOrbitalElements(t *testing.T) {
 		v := f64.Vec3{v2[0] - v1[0], v2[1] - v1[1], v2[2] - v1[2]}
 
 		m1, m2 := 5.972e24, 7.34767309e22
-		mu := gravity.G * (m1 + m2)
 
 		expectedA := 502989447.71483934
 		expectedE := 0.1940188768535872
@@ -120,7 +118,7 @@ func TestOrbitalElements(t *testing.T) {
 		require.Equal(t, fmt.Sprintf("%.5f", expectedLAN), fmt.Sprintf("%.5f", gravity.Degrees(lan)))
 		require.Equal(t, fmt.Sprintf("%.5f", expectedI), fmt.Sprintf("%.5f", gravity.Degrees(i)))
 		require.Equal(t, fmt.Sprintf("%.5f", expectedM), fmt.Sprintf("%.5f", m))
-		require.Equal(t, fmt.Sprintf("%.5f", expectedPeriod), fmt.Sprintf("%.5f", gravity.Period(a, mu)))
+		require.Equal(t, fmt.Sprintf("%.5f", expectedPeriod), fmt.Sprintf("%.5f", gravity.Period(a, m1, m2)))
 		require.Equal(t, fmt.Sprintf("%.5f", expectedPE), fmt.Sprintf("%.5f", gravity.Periapsis(a, e)))
 		require.Equal(t, fmt.Sprintf("%.5f", expectedAP), fmt.Sprintf("%.5f", gravity.Apoapsis(a, e)))
 	})
@@ -181,8 +179,7 @@ func TestStateVectors(t *testing.T) {
 		i := 180.00000000000017
 		m := 2.1421319455355324e-16
 		m1, m2 := 5.972e24, 7.34767309e22
-		mu := gravity.G * (m1 + m2)
-		T := gravity.Period(a, mu) / 2
+		T := gravity.Period(a, m1, m2) / 2
 
 		expectedRX := 1602.6810503687375
 		expectedRY := -6.005788954275403e+08
