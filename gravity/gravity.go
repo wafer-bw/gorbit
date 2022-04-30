@@ -79,7 +79,7 @@ func EccentricAnomoly(e float64, m float64) float64 {
 // vZ=0  -> vZ=eps,
 // e=0   -> e=eps,
 // i=0   -> i=eps,
-// i=180 -> i=180-eps.
+// i=Pi  -> i=Pi-eps [180 (deg) = Pi (rad)].
 //
 // If the primary body is on-rails then set m2 to 0. If you don't
 // set m2 to 0 then the elements will be predicted based on the
@@ -121,7 +121,7 @@ func OrbitalElements(r f64.Vec3, v f64.Vec3, m1 float64, m2 float64) (a, e, w, l
 	i = math.Acos(h[2] / vec3.Magnitude(h))
 	if i == 0 {
 		i = Epsilon
-	} else if i == 180 {
+	} else if i == Pi {
 		i -= Epsilon
 	}
 
