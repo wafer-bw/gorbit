@@ -2,11 +2,11 @@ package gravity_test
 
 import (
 	"fmt"
-	"math"
 	"testing"
 
 	"github.com/stretchr/testify/require"
 	"github.com/wafer-bw/gorbit/gravity"
+	"github.com/wafer-bw/gorbit/vec3"
 	"golang.org/x/image/math/f64"
 )
 
@@ -14,42 +14,38 @@ func TestForce(t *testing.T) {
 	t.Run("succeed in calculating gravitational force along the x axis", func(t *testing.T) {
 		p1, p2 := f64.Vec3{200, 0, 0}, f64.Vec3{0, 0, 0}
 		m1, m2 := 2e+6, 8e+6
-		f := gravity.Force(p1, p2, m1, m2)
-		fmag := math.Sqrt(f[0]*f[0] + f[1]*f[1] + f[2]*f[2])
+		f := gravity.Force(p2, p1, m1, m2)
 		require.Equal(t, "-0.02669", fmt.Sprintf("%.5f", f[0]))
 		require.Equal(t, "-0.00000", fmt.Sprintf("%.5f", f[1]))
 		require.Equal(t, "-0.00000", fmt.Sprintf("%.5f", f[2]))
-		require.Equal(t, "0.02669", fmt.Sprintf("%.5f", fmag))
+		require.Equal(t, "0.02669", fmt.Sprintf("%.5f", vec3.Magnitude(f)))
 	})
 	t.Run("succeed in calculating gravitational force along the y axis", func(t *testing.T) {
 		p1, p2 := f64.Vec3{0, 200, 0}, f64.Vec3{0, 0, 0}
 		m1, m2 := 2e+6, 8e+6
-		f := gravity.Force(p1, p2, m1, m2)
-		fmag := math.Sqrt(f[0]*f[0] + f[1]*f[1] + f[2]*f[2])
+		f := gravity.Force(p2, p1, m1, m2)
 		require.Equal(t, "-0.00000", fmt.Sprintf("%.5f", f[0]))
 		require.Equal(t, "-0.02669", fmt.Sprintf("%.5f", f[1]))
 		require.Equal(t, "-0.00000", fmt.Sprintf("%.5f", f[2]))
-		require.Equal(t, "0.02669", fmt.Sprintf("%.5f", fmag))
+		require.Equal(t, "0.02669", fmt.Sprintf("%.5f", vec3.Magnitude(f)))
 	})
 	t.Run("succeed in calculating gravitational force along the z axis", func(t *testing.T) {
 		p1, p2 := f64.Vec3{0, 0, 200}, f64.Vec3{0, 0, 0}
 		m1, m2 := 2e+6, 8e+6
-		f := gravity.Force(p1, p2, m1, m2)
-		fmag := math.Sqrt(f[0]*f[0] + f[1]*f[1] + f[2]*f[2])
+		f := gravity.Force(p2, p1, m1, m2)
 		require.Equal(t, "-0.00000", fmt.Sprintf("%.5f", f[0]))
 		require.Equal(t, "-0.00000", fmt.Sprintf("%.5f", f[1]))
 		require.Equal(t, "-0.02669", fmt.Sprintf("%.5f", f[2]))
-		require.Equal(t, "0.02669", fmt.Sprintf("%.5f", fmag))
+		require.Equal(t, "0.02669", fmt.Sprintf("%.5f", vec3.Magnitude(f)))
 	})
 	t.Run("succeed in calculating gravitational force along all axes", func(t *testing.T) {
 		p1, p2 := f64.Vec3{200, 200, 200}, f64.Vec3{0, 0, 0}
 		m1, m2 := 2e+6, 8e+6
-		f := gravity.Force(p1, p2, m1, m2)
-		fmag := math.Sqrt(f[0]*f[0] + f[1]*f[1] + f[2]*f[2])
+		f := gravity.Force(p2, p1, m1, m2)
 		require.Equal(t, "-0.00514", fmt.Sprintf("%.5f", f[0]))
 		require.Equal(t, "-0.00514", fmt.Sprintf("%.5f", f[1]))
 		require.Equal(t, "-0.00514", fmt.Sprintf("%.5f", f[2]))
-		require.Equal(t, "0.00890", fmt.Sprintf("%.5f", fmag))
+		require.Equal(t, "0.00890", fmt.Sprintf("%.5f", vec3.Magnitude(f)))
 	})
 }
 
@@ -61,8 +57,8 @@ func TestOrbitalElements(t *testing.T) {
 		p2 := f64.Vec3{0, 405400000, gravity.Epsilon}
 		v2 := f64.Vec3{1090, 0, gravity.Epsilon}
 
-		r := f64.Vec3{p2[0] - p1[0], p2[1] - p1[1], p2[2] - p1[2]}
-		v := f64.Vec3{v2[0] - v1[0], v2[1] - v1[1], v2[2] - v1[2]}
+		r := vec3.Sub(p2, p1)
+		v := vec3.Sub(v2, v1)
 
 		m1, m2 := 5.972e24, 7.34767309e22
 
@@ -95,15 +91,15 @@ func TestOrbitalElements(t *testing.T) {
 		p2 := f64.Vec3{0, 405400000, 0}
 		v2 := f64.Vec3{1090, 0, 0}
 
-		r := f64.Vec3{p2[0] - p1[0], p2[1] - p1[1], p2[2] - p1[2]}
-		v := f64.Vec3{v2[0] - v1[0], v2[1] - v1[1], v2[2] - v1[2]}
+		r := vec3.Sub(p2, p1)
+		v := vec3.Sub(v2, v1)
 
 		m1, m2 := 5.972e24, 7.34767309e22
 
 		expectedA := 502989447.71483934
 		expectedE := 0.1940188768535872
 		expectedI := 180.00000000000017
-		expectedLAN := float64(0)
+		expectedLAN := float64(90)
 		expectedW := float64(0)
 		expectedM := 2.1421319455355324e-16
 
@@ -112,15 +108,15 @@ func TestOrbitalElements(t *testing.T) {
 		expectedAP := 600578895.4296786
 
 		a, e, w, lan, i, m := gravity.OrbitalElements(r, v, m1, m2)
-		require.Equal(t, fmt.Sprintf("%.5f", expectedA), fmt.Sprintf("%.5f", a))
-		require.Equal(t, fmt.Sprintf("%.5f", expectedE), fmt.Sprintf("%.5f", e))
+		require.Equal(t, fmt.Sprintf("%.3f", expectedA), fmt.Sprintf("%.3f", a))
+		require.Equal(t, fmt.Sprintf("%.3f", expectedE), fmt.Sprintf("%.3f", e))
 		require.Equal(t, fmt.Sprintf("%.3f", expectedW), fmt.Sprintf("%.3f", gravity.Degrees(w)))
-		require.Equal(t, fmt.Sprintf("%.5f", expectedLAN), fmt.Sprintf("%.5f", gravity.Degrees(lan)))
-		require.Equal(t, fmt.Sprintf("%.5f", expectedI), fmt.Sprintf("%.5f", gravity.Degrees(i)))
-		require.Equal(t, fmt.Sprintf("%.5f", expectedM), fmt.Sprintf("%.5f", m))
-		require.Equal(t, fmt.Sprintf("%.5f", expectedPeriod), fmt.Sprintf("%.5f", gravity.Period(a, m1, m2)))
-		require.Equal(t, fmt.Sprintf("%.5f", expectedPE), fmt.Sprintf("%.5f", gravity.Periapsis(a, e)))
-		require.Equal(t, fmt.Sprintf("%.5f", expectedAP), fmt.Sprintf("%.5f", gravity.Apoapsis(a, e)))
+		require.Equal(t, fmt.Sprintf("%.3f", expectedLAN), fmt.Sprintf("%.3f", gravity.Degrees(lan)))
+		require.Equal(t, fmt.Sprintf("%.3f", expectedI), fmt.Sprintf("%.3f", gravity.Degrees(i)))
+		require.Equal(t, fmt.Sprintf("%.3f", expectedM), fmt.Sprintf("%.3f", m))
+		require.Equal(t, fmt.Sprintf("%.3f", expectedPeriod), fmt.Sprintf("%.3f", gravity.Period(a, m1, m2)))
+		require.Equal(t, fmt.Sprintf("%.3f", expectedPE), fmt.Sprintf("%.3f", gravity.Periapsis(a, e)))
+		require.Equal(t, fmt.Sprintf("%.3f", expectedAP), fmt.Sprintf("%.3f", gravity.Apoapsis(a, e)))
 	})
 }
 
@@ -215,8 +211,8 @@ func TestSvToOeToSv(t *testing.T) {
 	p2 := f64.Vec3{0, 405400000, 100}
 	v2 := f64.Vec3{1090, 0, 10}
 
-	r := f64.Vec3{p2[0] - p1[0], p2[1] - p1[1], p2[2] - p1[2]}
-	v := f64.Vec3{v2[0] - v1[0], v2[1] - v1[1], v2[2] - v1[2]}
+	r := vec3.Sub(p2, p1)
+	v := vec3.Sub(v2, v1)
 
 	m1, m2 := 5.972e24, 7.34767309e22
 
