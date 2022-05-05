@@ -33,7 +33,7 @@ func BenchmarkForce(b *testing.B) {
 func BenchmarkEccentricAnomaly(b *testing.B) {
 	rand.Seed(time.Now().UnixNano())
 	for i := 0; i < b.N; i++ {
-		gravity.EccentricAnomoly(rand.Float64(), gravity.Radians(float64(rand.Intn(360))))
+		gravity.EccentricAnomaly(rand.Float64(), gravity.Radians(float64(rand.Intn(360))))
 	}
 }
 

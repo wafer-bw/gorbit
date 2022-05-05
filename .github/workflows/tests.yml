@@ -24,9 +24,6 @@ jobs:
       - name: Get dependencies
         run: go get -d -t -v ./...
 
-      # - name: Build
-      #   run:  build -v -o ./main
-
       - name: Test
         run: go test -failfast -timeout=1m -short -covermode=count -coverprofile=coverage.out ./...
 

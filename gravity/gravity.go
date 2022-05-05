@@ -1,6 +1,7 @@
 package gravity
 
 import (
+	"log"
 	"math"
 
 	"github.com/wafer-bw/gorbit/vec3"
@@ -32,24 +33,35 @@ func Force(p1 f64.Vec3, p2 f64.Vec3, m1 float64, m2 float64) f64.Vec3 {
 	return vec3.MulScalar(rhat, -(G*m1*m2)/(d*d))
 }
 
-// EccentricAnomoly (rad) using Newton's method.
+// EccentricAnomaly (rad) using Newton's method.
 //
 // e: eccentricity (0-1),
 // m: mean anomaly (rad).
 //
 // http://www.csun.edu/~hcmth017/master/node16.html
-func EccentricAnomoly(e float64, m float64) float64 {
+func EccentricAnomaly(e float64, m float64) float64 {
 	eca := m
 	if m >= 0.99 {
 		eca = Pi
 	}
 	e1 := float64(0)
 	diff := math.MaxFloat64
+	iter := 0
 	for diff > Epsilon5 {
+		iter += 1
 		e1 = eca - (eca-e*math.Sin(eca)-m)/(1-e*math.Cos(eca))
+		if iter == 1 && e1 == eca {
+			e1 = math.Abs(eca - Epsilon5)
+		}
 		diff = math.Abs(e1 - eca)
 		eca = e1
+		log.Printf("iter %d e %.15f m %.15f", iter, e, m)
+		log.Printf("%.7f - %.7f = %.7f", e1, eca, diff)
+		if iter > 20 {
+			panic("real bad")
+		}
 	}
+
 	return eca
 }
 
@@ -172,7 +184,7 @@ func StateVectors(a, e, w, lan, i, m0, t, m1, m2 float64) (f64.Vec3, f64.Vec3) {
 	if t != 0 {
 		mT = m0 + (t * math.Sqrt(mu/(a*a*a)))
 	}
-	ecaT := EccentricAnomoly(e, mT)
+	ecaT := EccentricAnomaly(e, mT)
 	taT := 2 * (math.Atan2(math.Sqrt(1+e)*math.Sin(ecaT/2), math.Sqrt(1-e)*math.Cos(ecaT/2)))
 	rcT := a * (1 - e*math.Cos(ecaT))
 
