@@ -123,11 +123,11 @@ func TestOrbitalElements(t *testing.T) {
 func TestEccentricAnomaly(t *testing.T) {
 	t.Run("max eccentricity, min mean anomaly", func(t *testing.T) {
 		eca := gravity.EccentricAnomaly(1, gravity.Radians(0))
-		require.Equal(t, "NaN", fmt.Sprintf("%.7f", eca))
+		require.Equal(t, "0.0000017", fmt.Sprintf("%.7f", eca))
 	})
 	t.Run("max eccentricity, max mean anomaly", func(t *testing.T) {
 		eca := gravity.EccentricAnomaly(1, gravity.Radians(360))
-		require.Equal(t, "NaN", fmt.Sprintf("%.7f", eca))
+		require.Equal(t, "6.2831514", fmt.Sprintf("%.7f", eca))
 	})
 	t.Run("min eccentricity, min mean anomaly", func(t *testing.T) {
 		eca := gravity.EccentricAnomaly(0, gravity.Radians(0))
@@ -157,7 +157,7 @@ func TestEccentricAnomaly(t *testing.T) {
 
 	t.Run("mid eccentricity, mid mean anomaly", func(t *testing.T) {
 		eca := gravity.EccentricAnomaly(0.5, gravity.Radians(180))
-		require.Equal(t, "6.2831836", fmt.Sprintf("%.7f", eca))
+		require.Equal(t, "3.1415927", fmt.Sprintf("%.7f", eca))
 	})
 
 	// t.Run("does not get stuck in infinite loop", func(t *testing.T) {

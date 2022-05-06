@@ -12,7 +12,7 @@ const (
 	G        float64 = 6.6725985e-11
 	Pi       float64 = 3.14159265358979
 	Epsilon  float64 = 1e-15 // very small number
-	Epsilon5 float64 = 1e-05 // small number
+	Epsilon6 float64 = 1e-06 // small number
 )
 
 // Force vector due to gravity (N) using Netwon's law of universal gravitation.
@@ -40,24 +40,21 @@ func Force(p1 f64.Vec3, p2 f64.Vec3, m1 float64, m2 float64) f64.Vec3 {
 //
 // http://www.csun.edu/~hcmth017/master/node16.html
 func EccentricAnomaly(e float64, m float64) float64 {
-	eca := m
-	if m >= 0.99 {
-		eca = Pi
-	}
+	eca := m + e/2
+	// if m >= 0.99 {
+	// 	eca = Pi
+	// }
 	e1 := float64(0)
 	diff := math.MaxFloat64
 	iter := 0
-	for diff > Epsilon5 {
+	for diff > Epsilon6 {
 		iter += 1
-		e1 = eca - (eca-e*math.Sin(eca)-m)/(1-e*math.Cos(eca))
-		if iter == 1 && e1 == eca {
-			e1 = math.Abs(eca - Epsilon5)
-		}
+		e1 = eca - ((eca - e*math.Sin(eca) - m) / (1 - e*math.Cos(eca)))
 		diff = math.Abs(e1 - eca)
 		eca = e1
 		log.Printf("iter %d e %.15f m %.15f", iter, e, m)
 		log.Printf("%.7f - %.7f = %.7f", e1, eca, diff)
-		if iter > 20 {
+		if iter > 50 {
 			panic("real bad")
 		}
 	}
