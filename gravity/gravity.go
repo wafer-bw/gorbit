@@ -1,7 +1,6 @@
 package gravity
 
 import (
-	"log"
 	"math"
 
 	"github.com/wafer-bw/gorbit/vec3"
@@ -41,9 +40,9 @@ func Force(p1 f64.Vec3, p2 f64.Vec3, m1 float64, m2 float64) f64.Vec3 {
 // http://www.csun.edu/~hcmth017/master/node16.html
 func EccentricAnomaly(e float64, m float64) float64 {
 	eca := m + e/2
-	// if m >= 0.99 {
-	// 	eca = Pi
-	// }
+	if e >= 0.60 {
+		eca = Pi
+	}
 	e1 := float64(0)
 	diff := math.MaxFloat64
 	iter := 0
@@ -52,13 +51,7 @@ func EccentricAnomaly(e float64, m float64) float64 {
 		e1 = eca - ((eca - e*math.Sin(eca) - m) / (1 - e*math.Cos(eca)))
 		diff = math.Abs(e1 - eca)
 		eca = e1
-		log.Printf("iter %d e %.15f m %.15f", iter, e, m)
-		log.Printf("%.7f - %.7f = %.7f", e1, eca, diff)
-		if iter > 50 {
-			panic("real bad")
-		}
 	}
-
 	return eca
 }
 

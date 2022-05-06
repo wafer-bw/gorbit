@@ -2,6 +2,7 @@ package gravity_test
 
 import (
 	"fmt"
+	"log"
 	"testing"
 
 	"github.com/stretchr/testify/require"
@@ -121,51 +122,62 @@ func TestOrbitalElements(t *testing.T) {
 }
 
 func TestEccentricAnomaly(t *testing.T) {
-	t.Run("max eccentricity, min mean anomaly", func(t *testing.T) {
-		eca := gravity.EccentricAnomaly(1, gravity.Radians(0))
-		require.Equal(t, "0.0000017", fmt.Sprintf("%.7f", eca))
-	})
-	t.Run("max eccentricity, max mean anomaly", func(t *testing.T) {
-		eca := gravity.EccentricAnomaly(1, gravity.Radians(360))
-		require.Equal(t, "6.2831514", fmt.Sprintf("%.7f", eca))
-	})
-	t.Run("min eccentricity, min mean anomaly", func(t *testing.T) {
-		eca := gravity.EccentricAnomaly(0, gravity.Radians(0))
-		require.Equal(t, "0.0000000", fmt.Sprintf("%.7f", eca))
-	})
-	t.Run("min eccentricity, max mean anomaly", func(t *testing.T) {
-		eca := gravity.EccentricAnomaly(0, gravity.Radians(360))
-		require.Equal(t, "6.2831853", fmt.Sprintf("%.7f", eca))
-	})
-
-	t.Run("high eccentricity, low mean anomaly", func(t *testing.T) {
-		eca := gravity.EccentricAnomaly(0.9999, gravity.Radians(0.0001))
-		require.Equal(t, "0.0134229", fmt.Sprintf("%.7f", eca))
-	})
-	t.Run("high eccentricity, high mean anomaly", func(t *testing.T) {
-		eca := gravity.EccentricAnomaly(0.9999, gravity.Radians(359.9999))
-		require.Equal(t, "6.2697624", fmt.Sprintf("%.7f", eca))
-	})
-	t.Run("low eccentricity, low mean anomaly", func(t *testing.T) {
-		eca := gravity.EccentricAnomaly(0.00001, gravity.Radians(0.0001))
-		require.Equal(t, "0.0000017", fmt.Sprintf("%.7f", eca))
-	})
-	t.Run("low eccentricity, high mean anomaly", func(t *testing.T) {
-		eca := gravity.EccentricAnomaly(0.00001, gravity.Radians(359.9999))
-		require.Equal(t, "6.2831836", fmt.Sprintf("%.7f", eca))
-	})
-
-	t.Run("mid eccentricity, mid mean anomaly", func(t *testing.T) {
-		eca := gravity.EccentricAnomaly(0.5, gravity.Radians(180))
-		require.Equal(t, "3.1415927", fmt.Sprintf("%.7f", eca))
-	})
-
-	// t.Run("does not get stuck in infinite loop", func(t *testing.T) {
-	// 	require.NotPanics(t, func() {
-	// 		eca := gravity.EccentricAnomaly(0.981453864327899, 0.296705972839036)
-	// 		require.Equal(t, "1.2431230", fmt.Sprintf("%.7f", eca))
-	// 	})
+	// t.Run("max eccentricity, min mean anomaly", func(t *testing.T) {
+	// 	eca := gravity.EccentricAnomaly(1, gravity.Radians(0))
+	// 	require.Equal(t, "0.0000017", fmt.Sprintf("%.7f", eca))
 	// })
+	// t.Run("max eccentricity, max mean anomaly", func(t *testing.T) {
+	// 	eca := gravity.EccentricAnomaly(1, gravity.Radians(360))
+	// 	require.Equal(t, "6.2831514", fmt.Sprintf("%.7f", eca))
+	// })
+	// t.Run("min eccentricity, min mean anomaly", func(t *testing.T) {
+	// 	eca := gravity.EccentricAnomaly(0, gravity.Radians(0))
+	// 	require.Equal(t, "0.0000000", fmt.Sprintf("%.7f", eca))
+	// })
+	// t.Run("min eccentricity, max mean anomaly", func(t *testing.T) {
+	// 	eca := gravity.EccentricAnomaly(0, gravity.Radians(360))
+	// 	require.Equal(t, "6.2831853", fmt.Sprintf("%.7f", eca))
+	// })
+
+	// t.Run("high eccentricity, low mean anomaly", func(t *testing.T) {
+	// 	eca := gravity.EccentricAnomaly(0.9999, gravity.Radians(0.0001))
+	// 	require.Equal(t, "0.0134229", fmt.Sprintf("%.7f", eca))
+	// })
+	// t.Run("high eccentricity, high mean anomaly", func(t *testing.T) {
+	// 	eca := gravity.EccentricAnomaly(0.9999, gravity.Radians(359.9999))
+	// 	require.Equal(t, "6.2697624", fmt.Sprintf("%.7f", eca))
+	// })
+	// t.Run("low eccentricity, low mean anomaly", func(t *testing.T) {
+	// 	eca := gravity.EccentricAnomaly(0.00001, gravity.Radians(0.0001))
+	// 	require.Equal(t, "0.0000017", fmt.Sprintf("%.7f", eca))
+	// })
+	// t.Run("low eccentricity, high mean anomaly", func(t *testing.T) {
+	// 	eca := gravity.EccentricAnomaly(0.00001, gravity.Radians(359.9999))
+	// 	require.Equal(t, "6.2831836", fmt.Sprintf("%.7f", eca))
+	// })
+
+	// t.Run("mid eccentricity, mid mean anomaly", func(t *testing.T) {
+	// 	eca := gravity.EccentricAnomaly(0.5, gravity.Radians(180))
+	// 	require.Equal(t, "3.1415927", fmt.Sprintf("%.7f", eca))
+	// })
+
+	t.Run("does not get stuck in infinite loop", func(t *testing.T) {
+		require.NotPanics(t, func() {
+			log.Println("deg", gravity.Degrees(5.201081170943097))
+			eca := gravity.EccentricAnomaly(0.991381980019313, 5.201081170943097)
+			require.Equal(t, "4.2948636", fmt.Sprintf("%.7f", eca))
+		})
+		require.NotPanics(t, func() {
+			log.Println("deg", gravity.Degrees(5.201081170943097))
+			eca := gravity.EccentricAnomaly(0.9988785156301621, gravity.Radians(294))
+			require.Equal(t, "4.2412262", fmt.Sprintf("%.7f", eca))
+		})
+		require.NotPanics(t, func() {
+			log.Println("deg", gravity.Degrees(5.201081170943097))
+			eca := gravity.EccentricAnomaly(0.976337273503912, gravity.Radians(333.00000000000006))
+			require.Equal(t, "4.8440605", fmt.Sprintf("%.7f", eca))
+		})
+	})
 }
 
 func TestStateVectors(t *testing.T) {
