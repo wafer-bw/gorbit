@@ -45,9 +45,7 @@ func EccentricAnomaly(e float64, m float64) float64 {
 	}
 	e1 := float64(0)
 	diff := math.MaxFloat64
-	iter := 0
 	for diff > Epsilon6 {
-		iter += 1
 		e1 = eca - ((eca - e*math.Sin(eca) - m) / (1 - e*math.Cos(eca)))
 		diff = math.Abs(e1 - eca)
 		eca = e1
