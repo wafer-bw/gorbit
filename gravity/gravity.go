@@ -3,13 +3,13 @@ package gravity
 import (
 	"math"
 
+	"github.com/wafer-bw/gorbit/theta"
 	"github.com/wafer-bw/gorbit/vec3"
 	"golang.org/x/image/math/f64"
 )
 
 const (
 	G        float64 = 6.6725985e-11
-	Pi       float64 = 3.14159265358979
 	Epsilon  float64 = 1e-15 // very small number
 	Epsilon6 float64 = 1e-06 // small number
 )
@@ -41,7 +41,7 @@ func Force(p1 f64.Vec3, p2 f64.Vec3, m1 float64, m2 float64) f64.Vec3 {
 func EccentricAnomaly(e float64, m float64) float64 {
 	eca := m + e/2
 	if e >= 0.60 {
-		eca = Pi
+		eca = theta.Pi
 	}
 	e1 := float64(0)
 	diff := math.MaxFloat64
@@ -115,13 +115,13 @@ func OrbitalElements(r f64.Vec3, v f64.Vec3, m1 float64, m2 float64) (a, e, w, l
 
 	ta := math.Acos(vec3.Dot(evec, r) / (e * rmag))
 	if vec3.Dot(r, v) < 0 {
-		ta = 2*Pi - ta
+		ta = 2*theta.Pi - ta
 	}
 
 	i = math.Acos(h[2] / vec3.Magnitude(h))
 	if i == 0 {
 		i = Epsilon
-	} else if i == Pi {
+	} else if i == theta.Pi {
 		i -= Epsilon
 	}
 
@@ -129,12 +129,12 @@ func OrbitalElements(r f64.Vec3, v f64.Vec3, m1 float64, m2 float64) (a, e, w, l
 
 	lan = math.Acos(n[0] / nmag)
 	if n[1] < 0 {
-		lan = 2*Pi - lan
+		lan = 2*theta.Pi - lan
 	}
 
 	w = math.Acos(vec3.Dot(n, evec) / (nmag * e))
 	if evec[2] < 0 {
-		w = 2*Pi - w
+		w = 2*theta.Pi - w
 	}
 
 	m = eca - (e * math.Sin(eca))
@@ -237,15 +237,5 @@ func Apoapsis(a, e float64) float64 {
 // https://en.wikipedia.org/wiki/Orbital_period
 func Period(a, m1, m2 float64) float64 {
 	mu := G * (m1 + m2)
-	return (2 * Pi) * math.Sqrt((a*a*a)/mu)
-}
-
-// Degrees from radians.
-func Degrees(rad float64) float64 {
-	return 180 * rad / Pi
-}
-
-// Radians from degrees.
-func Radians(deg float64) float64 {
-	return Pi * deg / 180
+	return (2 * theta.Pi) * math.Sqrt((a*a*a)/mu)
 }

@@ -6,6 +6,7 @@ import (
 
 	"github.com/stretchr/testify/require"
 	"github.com/wafer-bw/gorbit/gravity"
+	"github.com/wafer-bw/gorbit/theta"
 	"github.com/wafer-bw/gorbit/vec3"
 	"golang.org/x/image/math/f64"
 )
@@ -76,9 +77,9 @@ func TestOrbitalElements(t *testing.T) {
 		a, e, w, lan, i, m := gravity.OrbitalElements(r, v, m1, m2)
 		require.Equal(t, fmt.Sprintf("%.5f", expectedA), fmt.Sprintf("%.5f", a))
 		require.Equal(t, fmt.Sprintf("%.5f", expectedE), fmt.Sprintf("%.5f", e))
-		require.Equal(t, fmt.Sprintf("%.3f", expectedW), fmt.Sprintf("%.3f", gravity.Degrees(w)))
-		require.Equal(t, fmt.Sprintf("%.5f", expectedLAN), fmt.Sprintf("%.5f", gravity.Degrees(lan)))
-		require.Equal(t, fmt.Sprintf("%.5f", expectedI), fmt.Sprintf("%.5f", gravity.Degrees(i)))
+		require.Equal(t, fmt.Sprintf("%.3f", expectedW), fmt.Sprintf("%.3f", theta.Degrees(w)))
+		require.Equal(t, fmt.Sprintf("%.5f", expectedLAN), fmt.Sprintf("%.5f", theta.Degrees(lan)))
+		require.Equal(t, fmt.Sprintf("%.5f", expectedI), fmt.Sprintf("%.5f", theta.Degrees(i)))
 		require.Equal(t, fmt.Sprintf("%.5f", expectedM), fmt.Sprintf("%.5f", m))
 		require.Equal(t, fmt.Sprintf("%.5f", expectedPeriod), fmt.Sprintf("%.5f", gravity.Period(a, m1, m2)))
 		require.Equal(t, fmt.Sprintf("%.5f", expectedPE), fmt.Sprintf("%.5f", gravity.Periapsis(a, e)))
@@ -110,9 +111,9 @@ func TestOrbitalElements(t *testing.T) {
 		a, e, w, lan, i, m := gravity.OrbitalElements(r, v, m1, m2)
 		require.Equal(t, fmt.Sprintf("%.3f", expectedA), fmt.Sprintf("%.3f", a))
 		require.Equal(t, fmt.Sprintf("%.3f", expectedE), fmt.Sprintf("%.3f", e))
-		require.Equal(t, fmt.Sprintf("%.3f", expectedW), fmt.Sprintf("%.3f", gravity.Degrees(w)))
-		require.Equal(t, fmt.Sprintf("%.3f", expectedLAN), fmt.Sprintf("%.3f", gravity.Degrees(lan)))
-		require.Equal(t, fmt.Sprintf("%.3f", expectedI), fmt.Sprintf("%.3f", gravity.Degrees(i)))
+		require.Equal(t, fmt.Sprintf("%.3f", expectedW), fmt.Sprintf("%.3f", theta.Degrees(w)))
+		require.Equal(t, fmt.Sprintf("%.3f", expectedLAN), fmt.Sprintf("%.3f", theta.Degrees(lan)))
+		require.Equal(t, fmt.Sprintf("%.3f", expectedI), fmt.Sprintf("%.3f", theta.Degrees(i)))
 		require.Equal(t, fmt.Sprintf("%.3f", expectedM), fmt.Sprintf("%.3f", m))
 		require.Equal(t, fmt.Sprintf("%.3f", expectedPeriod), fmt.Sprintf("%.3f", gravity.Period(a, m1, m2)))
 		require.Equal(t, fmt.Sprintf("%.3f", expectedPE), fmt.Sprintf("%.3f", gravity.Periapsis(a, e)))
@@ -122,41 +123,41 @@ func TestOrbitalElements(t *testing.T) {
 
 func TestEccentricAnomaly(t *testing.T) {
 	t.Run("max eccentricity, min mean anomaly", func(t *testing.T) {
-		eca := gravity.EccentricAnomaly(1, gravity.Radians(0))
+		eca := gravity.EccentricAnomaly(1, theta.Radians(0))
 		require.Equal(t, "0.0000015", fmt.Sprintf("%.7f", eca))
 	})
 	t.Run("max eccentricity, max mean anomaly", func(t *testing.T) {
-		eca := gravity.EccentricAnomaly(1, gravity.Radians(360))
+		eca := gravity.EccentricAnomaly(1, theta.Radians(360))
 		require.Equal(t, "6.2831518", fmt.Sprintf("%.7f", eca))
 	})
 	t.Run("min eccentricity, min mean anomaly", func(t *testing.T) {
-		eca := gravity.EccentricAnomaly(0, gravity.Radians(0))
+		eca := gravity.EccentricAnomaly(0, theta.Radians(0))
 		require.Equal(t, "0.0000000", fmt.Sprintf("%.7f", eca))
 	})
 	t.Run("min eccentricity, max mean anomaly", func(t *testing.T) {
-		eca := gravity.EccentricAnomaly(0, gravity.Radians(360))
+		eca := gravity.EccentricAnomaly(0, theta.Radians(360))
 		require.Equal(t, "6.2831853", fmt.Sprintf("%.7f", eca))
 	})
 
 	t.Run("high eccentricity, low mean anomaly", func(t *testing.T) {
-		eca := gravity.EccentricAnomaly(0.9999, gravity.Radians(0.0001))
+		eca := gravity.EccentricAnomaly(0.9999, theta.Radians(0.0001))
 		require.Equal(t, "0.0134229", fmt.Sprintf("%.7f", eca))
 	})
 	t.Run("high eccentricity, high mean anomaly", func(t *testing.T) {
-		eca := gravity.EccentricAnomaly(0.9999, gravity.Radians(359.9999))
+		eca := gravity.EccentricAnomaly(0.9999, theta.Radians(359.9999))
 		require.Equal(t, "6.2697624", fmt.Sprintf("%.7f", eca))
 	})
 	t.Run("low eccentricity, low mean anomaly", func(t *testing.T) {
-		eca := gravity.EccentricAnomaly(0.00001, gravity.Radians(0.0001))
+		eca := gravity.EccentricAnomaly(0.00001, theta.Radians(0.0001))
 		require.Equal(t, "0.0000017", fmt.Sprintf("%.7f", eca))
 	})
 	t.Run("low eccentricity, high mean anomaly", func(t *testing.T) {
-		eca := gravity.EccentricAnomaly(0.00001, gravity.Radians(359.9999))
+		eca := gravity.EccentricAnomaly(0.00001, theta.Radians(359.9999))
 		require.Equal(t, "6.2831836", fmt.Sprintf("%.7f", eca))
 	})
 
 	t.Run("mid eccentricity, mid mean anomaly", func(t *testing.T) {
-		eca := gravity.EccentricAnomaly(0.5, gravity.Radians(180))
+		eca := gravity.EccentricAnomaly(0.5, theta.Radians(180))
 		require.Equal(t, "3.1415927", fmt.Sprintf("%.7f", eca))
 	})
 
@@ -166,11 +167,11 @@ func TestEccentricAnomaly(t *testing.T) {
 			require.Equal(t, "4.2948636", fmt.Sprintf("%.7f", eca))
 		})
 		require.NotPanics(t, func() {
-			eca := gravity.EccentricAnomaly(0.9988785156301621, gravity.Radians(294))
+			eca := gravity.EccentricAnomaly(0.9988785156301621, theta.Radians(294))
 			require.Equal(t, "4.2412262", fmt.Sprintf("%.7f", eca))
 		})
 		require.NotPanics(t, func() {
-			eca := gravity.EccentricAnomaly(0.976337273503912, gravity.Radians(333.00000000000006))
+			eca := gravity.EccentricAnomaly(0.976337273503912, theta.Radians(333.00000000000006))
 			require.Equal(t, "4.8440605", fmt.Sprintf("%.7f", eca))
 		})
 	})
@@ -197,10 +198,10 @@ func TestStateVectors(t *testing.T) {
 		r, v := gravity.StateVectors(
 			a,
 			e,
-			gravity.Radians(w),
-			gravity.Radians(lan),
-			gravity.Radians(i),
-			gravity.Radians(m),
+			theta.Radians(w),
+			theta.Radians(lan),
+			theta.Radians(i),
+			theta.Radians(m),
 			T,
 			m1,
 			m2,
@@ -232,10 +233,10 @@ func TestStateVectors(t *testing.T) {
 		r, v := gravity.StateVectors(
 			a,
 			e,
-			gravity.Radians(w),
-			gravity.Radians(lan),
-			gravity.Radians(i),
-			gravity.Radians(m),
+			theta.Radians(w),
+			theta.Radians(lan),
+			theta.Radians(i),
+			theta.Radians(m),
 			T,
 			m1,
 			m2,

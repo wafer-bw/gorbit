@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/wafer-bw/gorbit/gravity"
+	"github.com/wafer-bw/gorbit/theta"
 	"golang.org/x/image/math/f64"
 )
 
@@ -33,7 +34,7 @@ func BenchmarkForce(b *testing.B) {
 func BenchmarkEccentricAnomaly(b *testing.B) {
 	rand.Seed(time.Now().UnixNano())
 	for i := 0; i < b.N; i++ {
-		gravity.EccentricAnomaly(rand.Float64(), gravity.Radians(float64(rand.Intn(360))))
+		gravity.EccentricAnomaly(rand.Float64(), theta.Radians(float64(rand.Intn(360))))
 	}
 }
 
@@ -63,10 +64,10 @@ func BenchmarkStateVectors(b *testing.B) {
 		gravity.StateVectors(
 			rand.NormFloat64(),
 			rand.Float64(),
-			gravity.Radians(float64(rand.Intn(360))),
-			gravity.Radians(float64(rand.Intn(360))),
-			gravity.Radians(float64(rand.Intn(360))),
-			gravity.Radians(float64(rand.Intn(360))),
+			theta.Radians(float64(rand.Intn(360))),
+			theta.Radians(float64(rand.Intn(360))),
+			theta.Radians(float64(rand.Intn(360))),
+			theta.Radians(float64(rand.Intn(360))),
 			math.Abs(rand.NormFloat64()),
 			math.Abs(rand.NormFloat64()),
 			math.Abs(rand.NormFloat64()),
@@ -92,19 +93,5 @@ func BenchmarkPeriod(b *testing.B) {
 	rand.Seed(time.Now().UnixNano())
 	for i := 0; i < b.N; i++ {
 		gravity.Period(rand.NormFloat64(), math.Abs(rand.NormFloat64()), math.Abs(rand.NormFloat64()))
-	}
-}
-
-func BenchmarkDegrees(b *testing.B) {
-	rand.Seed(time.Now().UnixNano())
-	for i := 0; i < b.N; i++ {
-		gravity.Degrees(rand.NormFloat64())
-	}
-}
-
-func BenchmarkRadians(b *testing.B) {
-	rand.Seed(time.Now().UnixNano())
-	for i := 0; i < b.N; i++ {
-		gravity.Radians(rand.NormFloat64())
 	}
 }
