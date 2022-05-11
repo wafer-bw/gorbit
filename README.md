@@ -48,4 +48,6 @@ BenchmarkRadians-12                     69422544                17.25 ns/op     
 - http://www.csun.edu/~hcmth017/master/node16.html
 
 ## Further Reading
+Right now singularities are handled using a small number but that's less than ideal. Implementing solutions such as the below would be preferred but my math skills have reached their limit already.
 - https://articles.adsabs.harvard.edu/full/seri/AJ.../0067//0000010.000.html
+- https://phys.libretexts.org/Bookshelves/Astronomy__Cosmology/Celestial_Mechanics_(Tatum)/09%3A_The_Two_Body_Problem_in_Two_Dimensions/9.08%3A_Orbital_Elements_and_Velocity_Vector
